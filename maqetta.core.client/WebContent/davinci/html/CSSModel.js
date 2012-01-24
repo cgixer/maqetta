@@ -1,10 +1,11 @@
-dojo.provide("davinci.html.CSSModel");
-dojo.require("davinci.model.Model");
-dojo.require("davinci.html.CSSParser");
-dojo.require("davinci.model.Path");
-dojo.require("system.resource");
-dojo.require("davinci.model.Factory");
-
+define([
+	"dojo/_base/declare",
+	"davinci/model/Model",
+	"./CSSParser",
+	"davinci/model/Path",
+	"system/resource",
+	"davinci/model/Factory"
+], function(declare, Model, CSSParser, Path, resource, Factory){
 
 var pushComment=null;
 
@@ -14,8 +15,7 @@ if (!davinci.html)
 if(!davinci.html.css)
 	davinci.html.css = {};
 
-dojo.declare("davinci.html.dd", null, {xx:1});
-
+declare("davinci.html.dd", null, {xx:1});
 
 /* shorthand properties */
 if(!davinci.html.css.shorthand){
@@ -177,7 +177,7 @@ davinci.html.CSSFile.prototype.setText = function(text) {
     // this.errors.push(e);
     //		   
     // }
-    var result = davinci.html.CSSParser.parse(text, this);
+    var result = CSSParser.parse(text, this);
     this.errors = result.errors;
 
     if (this.errors.length > 0
@@ -376,7 +376,7 @@ davinci.html.CSSRule.prototype.setText = function(text) {
         css : true
     };
 
-    var result = davinci.html.CSSParser.parse(text, this);
+    var result = CSSParser.parse(text, this);
 
     // first child is actually the parsed element, so replace this with child
     dojo.mixin(this, this.children[0]);
@@ -855,13 +855,17 @@ davinci.html.CSSAtRule = function() {
     this.inherits(davinci.html.CSSElement);
     this.elementType = "CSSAtRule";
 };
+
 davinci.Inherits(davinci.html.CSSAtRule, davinci.html.CSSElement);
 
 davinci.html.CSSAtRule.prototype.getCSSFile = function() {
     return this.parent;
 };
+
 davinci.html.CSSAtRule.prototype.getText = function(context) {
     s = "@";
     s = s + this.name + " " + this.value + "\n";
     return s;
 };
+
+});

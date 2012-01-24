@@ -120,9 +120,9 @@ dojo.declare("davinci.js.ui.FormatOptions",davinci.workbench.PanelPreferencePane
  		    function updateExample(options) {
  		    
                var exampleJS="function abc(def,jhk){ var a=1; var obj={a:2,b:'33'}; label: if (true) { return;} for (i;i<2;i++){} switch (a){case 1: a=1; case 2:a=2;}}";
- 				var jsFile = new davinci.js.JSFile();
+ 				var jsFile = new davinci.js.JSModel.JSFile();
  				jsFile.setText(exampleJS);
- 				var formatted_text = davinci.js.format(jsFile,options);
+ 				var formatted_text = davinci.js.Format.format(jsFile,options);
             
  	            div.innerHTML="<div border=\"3\"><pre>"+formatted_text+"</pre></div>";
  	            }

@@ -1,14 +1,14 @@
-dojo.provide("davinci.html.ui.CSSOutline");
-dojo.require("davinci.ui.widgets.DavinciModelTreeModel");
+define([
+	"dojo/_base/declare",
+	"davinci/html/ui/CSSOutline",
+	"davinci/ui/widgets/DavinciModelTreeModel"
+], function(declare, CSSOutline, DavinciModelTreeModel){
 
-
-dojo.declare("davinci.html.ui.CSSOutline", null, {
-	
+declare("davinci.html.ui.CSSOutline", null, {
 	constructor : function (model)
 	{
 		this._cssModel=model;
 	},
-	
 	
 	getModel : function()
 	{
@@ -17,7 +17,7 @@ dojo.declare("davinci.html.ui.CSSOutline", null, {
 	}
 });
 
-dojo.declare("davinci.html.ui.CSSOutlineModel",	davinci.ui.widgets.DavinciModelTreeModel, {
+declare("davinci.html.ui.CSSOutlineModel", DavinciModelTreeModel, {
 
 	_childList: function(item)
 	{
@@ -36,4 +36,5 @@ dojo.declare("davinci.html.ui.CSSOutlineModel",	davinci.ui.widgets.DavinciModelT
 		
 		return children;
 	}
+});
 });

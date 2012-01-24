@@ -1,11 +1,17 @@
+define([
+	"davinci/model/parser/Tokenizer"
+], function(Tokenizer){
+
+/*
 dojo.provide("davinci.html.CSSParser");
 
 dojo.require("davinci.html.CSSModel");
 dojo.require("davinci.model.parser.Tokenizer");
-
+*/
+	
 var pushComment=null;
 
-davinci.html.CSSParser = (function() {
+CSSParser = (function() {
     var tokenizeCSS = (function() {
         function normal(source, setState) {
             var ch = source.next();
@@ -156,7 +162,7 @@ davinci.html.CSSParser = (function() {
   return {make: parseCSS, electricChars: "}"};
 })();
 
- davinci.html.CSSParser.parse = function (text, parentElement) {
+ CSSParser.parse = function (text, parentElement) {
      var stream, inHtml;
      if (typeof text == "string") {
          var txtStream = {
@@ -175,7 +181,7 @@ davinci.html.CSSParser = (function() {
          stream = text;
          inHtml = true;
      }
-     var parser = davinci.html.CSSParser.make(stream);
+     var parser = CSSParser.make(stream);
      var token;
      var selector;
      var combined;
@@ -503,3 +509,6 @@ davinci.html.CSSParser = (function() {
 	  
 	  return {errors:errors};
 };
+
+return CSSParser;
+});

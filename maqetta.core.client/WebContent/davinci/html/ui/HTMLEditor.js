@@ -1,11 +1,11 @@
-dojo.provide("davinci.html.ui.HTMLEditor");
- 
-dojo.require("davinci.ui.ModelEditor");
-dojo.require("davinci.html.HTMLModel");
-dojo.require("davinci.html.ui.HTMLOutline");
+define([
+	"dojo/_base/declare",
+	"davinci/ui/ModelEditor",
+	"davinci/html/HTMLModel",
+	"davinci/html/ui/HTMLOutline"
+], function(declare, ModelEditor, HTMLModel, HTMLOutline){
 
-
-dojo.declare("davinci.html.ui.HTMLEditor", davinci.ui.ModelEditor, {
+return declare("davinci.html.ui.HTMLEditor", ModelEditor, {
 
     constructor : function (element) {
         this.htmlFile=davinci.model.Factory.newHTML();
@@ -16,8 +16,6 @@ dojo.declare("davinci.html.ui.HTMLEditor", davinci.ui.ModelEditor, {
     destroy : function () {
         this.htmlFile.close();
         this.inherited(arguments);
-
-
     },
 
     getOutline : function () {
@@ -30,6 +28,7 @@ dojo.declare("davinci.html.ui.HTMLEditor", davinci.ui.ModelEditor, {
         return "<html>\n <head></head>\n <body></body>\n</html>";
     }
 
+});
 });
 
 

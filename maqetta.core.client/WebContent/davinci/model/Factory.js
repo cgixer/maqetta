@@ -1,6 +1,7 @@
 dojo.provide("davinci.model.Factory");
 dojo.require("davinci.html.CSSModel");
 dojo.require("davinci.html.HTMLModel");
+dojo.require("davinci.js.JSModel");
 
 
 if (!davinci)
@@ -93,7 +94,7 @@ davinci.model.Factory.newCSS = function( args  ){
 };
 
 davinci.model.Factory.newJS = function( args  ){
-	var model = new davinci.js.JSFile(args);
+	var model = new davinci.js.JSModel.JSFile(args);
 	davinci.model.Factory.getInstance()._resources.push(model);
 	var count = davinci.model.Factory.getInstance()._resources.length-1;
 	davinci.model.Factory.getInstance()._instances[count] = 1;

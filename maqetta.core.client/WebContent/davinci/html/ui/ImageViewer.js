@@ -1,11 +1,11 @@
-dojo.provide("davinci.html.ui.ImageViewer");
+define([
+	"dojo/_base/declare"
+], function(declare){
 
-
-dojo.declare("davinci.html.ui.ImageViewer", null, {
-	
+declare("davinci.html.ui.ImageViewer", null, {
 	isReadOnly : true,
 	
-	  constructor : function (element) {
+	constructor : function (element) {
 	    this.element=element;
 	},
 	
@@ -21,6 +21,7 @@ dojo.declare("davinci.html.ui.ImageViewer", null, {
 	{
 		return false;
 	},
+	
 	setContent : function (fileName,content)
 	{
 		this.fileName=fileName;
@@ -33,7 +34,5 @@ dojo.declare("davinci.html.ui.ImageViewer", null, {
 	destroy : function ()
 	{
 	}
-	
-
-
+});
 });

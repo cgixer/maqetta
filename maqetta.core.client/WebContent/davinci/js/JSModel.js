@@ -1,6 +1,7 @@
-dojo.provide("davinci.js.JSModel");
-dojo.require("davinci.model.Model");
-// dojo.require("davinci.model.parser.Parser");
+define([
+	"exports",
+	"davinci/model/Model"
+], function(exports){
 
 // FIXME: these are globals
 var pushComment = null;
@@ -15,7 +16,7 @@ if (!davinci.js) {
  * @constructor
  * @extends davinci.model.Model
  */
-davinci.js.JSElement = function() {
+exports.JSElement = function() {
 
     this.inherits(davinci.model.Model);
     this.elementType = "JSElement";
@@ -30,40 +31,40 @@ davinci.js.JSElement = function() {
     }
 };
 
-davinci.Inherits(davinci.js.JSElement, davinci.model.Model);
+davinci.Inherits(exports.JSElement, davinci.model.Model);
 
-davinci.js.JSElement.prototype.printNewLine = function(context) {
+exports.JSElement.prototype.printNewLine = function(context) {
     var s = "\n";
     for ( var i = 0; i < context.indent; i++ )
         s = s + " ";
     return s;
 };
 
-davinci.js.JSElement.prototype.printStatement = function(context, stmt) {
+exports.JSElement.prototype.printStatement = function(context, stmt) {
 
     return this.printNewLine(context) + stmt.getText(context)
             + (stmt.nosemicolon ? "" : ";");
 };
 
-davinci.js.JSElement.prototype.add = function(e) {
+exports.JSElement.prototype.add = function(e) {
     this.addChild(e);
 };
 
-davinci.js.JSElement.prototype.init = function(start, stop, name) {
+exports.JSElement.prototype.init = function(start, stop, name) {
 
 };
 
-davinci.js.JSElement.prototype.getLabel = function() {
+exports.JSElement.prototype.getLabel = function() {
     context = {};
     context.indent = 0;
     return this.getText(context);
 };
 
-davinci.js.JSElement.prototype.getID = function() {
+exports.JSElement.prototype.getID = function() {
     return this.parent.getID() + ":" + this.startLine + ":" + this.getLabel();
 };
 
-davinci.js.JSElement.prototype.getSyntaxPositions = function(lineNumber) {
+exports.JSElement.prototype.getSyntaxPositions = function(lineNumber) {
     var positions = [];
 
     function add(line, col, length, type) {
@@ -131,9 +132,9 @@ davinci.js.JSElement.prototype.getSyntaxPositions = function(lineNumber) {
  * @constructor
  * @extends davinci.js.JSElement
  */
-davinci.js.JSFile = function(origin) {
+exports.JSFile = function(origin) {
 
-    this.inherits(davinci.js.JSElement);
+    this.inherits(exports.JSElement);
     this.elementType = "JSFile";
     this.nosemicolon = true;
     this._textContent = "";
@@ -142,25 +143,25 @@ davinci.js.JSFile = function(origin) {
         this.origin = origin;
 
 };
-davinci.Inherits(davinci.js.JSFile, davinci.js.JSElement);
+davinci.Inherits(exports.JSFile, exports.JSElement);
 
-davinci.js.JSFile.prototype.getText = function(context) {
+exports.JSFile.prototype.getText = function(context) {
     return this._textContent;
 };
 
-davinci.js.JSFile.prototype.setText = function(text) {
+exports.JSFile.prototype.setText = function(text) {
     this._textContent = text;
 };
 
-davinci.js.JSFile.prototype.getLabel = function() {
+exports.JSFile.prototype.getLabel = function() {
     return this.fileName;
 };
 
-davinci.js.JSFile.prototype.getID = function() {
+exports.JSFile.prototype.getID = function() {
     return this.fileName;
 };
 
-davinci.js.JSFile.prototype.visit = function(visitor) {
+exports.JSFile.prototype.visit = function(visitor) {
     var dontVisitChildren;
 
     dontVisitChildren = visitor.visit(this);
@@ -173,9 +174,9 @@ davinci.js.JSFile.prototype.visit = function(visitor) {
 
 };
 //
-// davinci.js.JSFile.prototype.getSyntaxPositions = function(lineNumber){
+// exports.JSFile.prototype.getSyntaxPositions = function(lineNumber){
 // var positions
-// =davinci.js.JSElement.prototype.getSyntaxPositions.apply(this,[lineNumber]);
+// =exports.JSElement.prototype.getSyntaxPositions.apply(this,[lineNumber]);
 //	
 //
 // for (var i=0;i<this.errors.length;i++)
@@ -189,30 +190,30 @@ davinci.js.JSFile.prototype.visit = function(visitor) {
 // return positions;
 // }
 
-// dojo.declare("davinci.js.JSFile", davinci.js.JSElement, {
+// dojo.declare("exports.JSFile", exports.JSElement, {
 // elementType : "JSFile",
 //	
 // getText : function () {},
 // setText : function (text) {
-// davinci.js.JSElement.parse(text,this);
+// exports.JSElement.parse(text,this);
 // }
 //
 //	
 // });
 
 /**
- * @class davinci.js.Expression
+ * @class exports.Expression
  * @constructor
- * @extends davinci.js.JSElement
+ * @extends exports.JSElement
  */
-davinci.js.Expression = function() {
+exports.Expression = function() {
 
-    this.inherits(davinci.js.JSElement);
+    this.inherits(exports.JSElement);
     this.elementType = "Expression";
 };
-davinci.Inherits(davinci.js.Expression, davinci.js.JSElement);
+davinci.Inherits(exports.Expression, exports.JSElement);
 
-davinci.js.Expression.prototype.getText = function() {
+exports.Expression.prototype.getText = function() {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -225,10 +226,10 @@ davinci.js.Expression.prototype.getText = function() {
     return s;
 
 };
-davinci.js.Expression.prototype.add = function(e) {
+exports.Expression.prototype.add = function(e) {
 };
 
-// dojo.declare("davinci.js.Expression", davinci.js.JSElement, {
+// dojo.declare("exports.Expression", exports.JSElement, {
 // elementType : "Expression",
 //	
 // getText : function () {},
@@ -238,13 +239,13 @@ davinci.js.Expression.prototype.add = function(e) {
 //
 
 /**
- * @class davinci.js.Function
- * @extends davinci.js.Expression
+ * @class exports.Function
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.Function = function() {
+exports.Function = function() {
 
-    this.inherits(davinci.js.Expression);
+    this.inherits(exports.Expression);
     this.elementType = "Function";
     this.name = null;
     this.parms = [];
@@ -253,12 +254,12 @@ davinci.js.Function = function() {
     this.nosemicolon = true;
 
 };
-davinci.Inherits(davinci.js.Function, davinci.js.Expression);
-davinci.js.Function.prototype.add = function(e) {
+davinci.Inherits(exports.Function, exports.Expression);
+exports.Function.prototype.add = function(e) {
     this.addChild(e);
 };
 
-davinci.js.Function.prototype.getText = function(context) {
+exports.Function.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -289,7 +290,7 @@ davinci.js.Function.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.Function.prototype.getLabel = function() {
+exports.Function.prototype.getLabel = function() {
     var s = "function ";
     if (this.name != null)
         s = s + this.name + " ";
@@ -304,7 +305,7 @@ davinci.js.Function.prototype.getLabel = function() {
     return s;
 };
 
-davinci.js.Function.prototype.visit = function(visitor) {
+exports.Function.prototype.visit = function(visitor) {
     var dontVisitChildren;
     dontVisitChildren = visitor.visit(this);
     /* visit params before statements */
@@ -324,19 +325,19 @@ davinci.js.Function.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.NameReference
- * @extends davinci.js.Expression
+ * @class exports.NameReference
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.NameReference = function() {
+exports.NameReference = function() {
 
-    this.inherits(davinci.js.Expression);
+    this.inherits(exports.Expression);
     this.elementType = "NameReference";
     this.name = "";
 };
-davinci.Inherits(davinci.js.NameReference, davinci.js.Expression);
+davinci.Inherits(exports.NameReference, exports.Expression);
 
-davinci.js.NameReference.prototype.getText = function(context) {
+exports.NameReference.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -347,27 +348,27 @@ davinci.js.NameReference.prototype.getText = function(context) {
     return s + this.name;
 };
 
-davinci.js.NameReference.prototype.visit = function(visitor) {
+exports.NameReference.prototype.visit = function(visitor) {
     visitor.visit(this);
     if (visitor.endVisit)
         visitor.endVisit(this);
 };
 
 /**
- * @class davinci.js.FieldReference
- * @extends davinci.js.Expression
+ * @class exports.FieldReference
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.FieldReference = function() {
+exports.FieldReference = function() {
 
-    this.inherits(davinci.js.Expression);
+    this.inherits(exports.Expression);
     this.elementType = "FieldReference";
     this.name = "";
     this.receiver = null;
 };
-davinci.Inherits(davinci.js.FieldReference, davinci.js.Expression);
+davinci.Inherits(exports.FieldReference, exports.Expression);
 
-davinci.js.FieldReference.prototype.getText = function(context) {
+exports.FieldReference.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -378,7 +379,7 @@ davinci.js.FieldReference.prototype.getText = function(context) {
     return s + this.receiver.getText(context) + "." + this.name;
 };
 
-davinci.js.FieldReference.prototype.visit = function(visitor) {
+exports.FieldReference.prototype.visit = function(visitor) {
     var dontVisitChildren;
 
     dontVisitChildren = visitor.visit(this);
@@ -389,7 +390,7 @@ davinci.js.FieldReference.prototype.visit = function(visitor) {
         visitor.endVisit(this);
 };
 
-// dojo.declare("davinci.js.FieldReference", davinci.js.Expression, {
+// dojo.declare("exports.FieldReference", exports.Expression, {
 // elementType : "FieldReference",
 // name : "",
 // receiver : null,
@@ -399,20 +400,20 @@ davinci.js.FieldReference.prototype.visit = function(visitor) {
 // });
 
 /**
- * @class davinci.js.FunctionCall
- * @extends davinci.js.Expression
+ * @class exports.FunctionCall
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.FunctionCall = function() {
+exports.FunctionCall = function() {
 
-    this.inherits(davinci.js.Expression);
+    this.inherits(exports.Expression);
     this.elementType = "FunctionCall";
     this.receiver = null;
     this.parms = [];
 };
-davinci.Inherits(davinci.js.FunctionCall, davinci.js.Expression);
+davinci.Inherits(exports.FunctionCall, exports.Expression);
 
-davinci.js.FunctionCall.prototype.getText = function(context) {
+exports.FunctionCall.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -431,7 +432,7 @@ davinci.js.FunctionCall.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.FunctionCall.prototype.visit = function(visitor) {
+exports.FunctionCall.prototype.visit = function(visitor) {
     var dontVisitChildren;
 
     dontVisitChildren = visitor.visit(this);
@@ -442,7 +443,7 @@ davinci.js.FunctionCall.prototype.visit = function(visitor) {
         visitor.endVisit(this);
 };
 
-// dojo.declare("davinci.js.FunctionCall", davinci.js.Expression, {
+// dojo.declare("exports.FunctionCall", exports.Expression, {
 // elementType : "FunctionCall",
 // parms : [],
 // receiver : null,
@@ -457,21 +458,21 @@ davinci.js.FunctionCall.prototype.visit = function(visitor) {
 // });
 
 /**
- * @class davinci.js.BinaryOperation
- * @extends davinci.js.Expression
+ * @class exports.BinaryOperation
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.BinaryOperation = function() {
+exports.BinaryOperation = function() {
 
-    this.inherits(davinci.js.Expression);
+    this.inherits(exports.Expression);
     this.elementType = "BinaryOperation";
     this.left = null;
     this.right = null;
     this.operator = 0;
 
 };
-davinci.Inherits(davinci.js.BinaryOperation, davinci.js.Expression);
-davinci.js.BinaryOperation.prototype.getText = function(context) {
+davinci.Inherits(exports.BinaryOperation, exports.Expression);
+exports.BinaryOperation.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -483,7 +484,7 @@ davinci.js.BinaryOperation.prototype.getText = function(context) {
             + this.right.getText(context);
 };
 
-davinci.js.BinaryOperation.prototype.visit = function(visitor) {
+exports.BinaryOperation.prototype.visit = function(visitor) {
     var dontVisitChildren;
     dontVisitChildren = visitor.visit(this);
     if (!dontVisitChildren) {
@@ -496,20 +497,20 @@ davinci.js.BinaryOperation.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.Literal
- * @extends davinci.js.Expression
+ * @class exports.Literal
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.Literal = function(type) {
+exports.Literal = function(type) {
 
-    this.inherits(davinci.js.Expression);
+    this.inherits(exports.Expression);
     this.elementType = "Literal";
     this.value = null;
     this.type = type;
 };
 
-davinci.Inherits(davinci.js.Literal, davinci.js.Expression);
-davinci.js.Literal.prototype.getText = function(context) {
+davinci.Inherits(exports.Literal, exports.Expression);
+exports.Literal.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -533,7 +534,7 @@ davinci.js.Literal.prototype.getText = function(context) {
     return s + this.value;
 };
 
-// dojo.declare("davinci.js.Literal", davinci.js.Expression, {
+// dojo.declare("exports.Literal", exports.Expression, {
 // elementType : "Literal",
 // value : null,
 // type : null,
@@ -545,19 +546,19 @@ davinci.js.Literal.prototype.getText = function(context) {
 //
 
 /**
- * @class davinci.js.ParenExpression
- * @extends davinci.js.Expression
+ * @class exports.ParenExpression
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.ParenExpression = function() {
+exports.ParenExpression = function() {
 
-    this.inherits(davinci.js.Expression);
+    this.inherits(exports.Expression);
     this.elementType = "ParenExpression";
     this.expression = null;
 };
 
-davinci.Inherits(davinci.js.ParenExpression, davinci.js.Expression);
-davinci.js.ParenExpression.prototype.getText = function(context) {
+davinci.Inherits(exports.ParenExpression, exports.Expression);
+exports.ParenExpression.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -569,7 +570,7 @@ davinci.js.ParenExpression.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.ParenExpression.prototype.visit = function(visitor) {
+exports.ParenExpression.prototype.visit = function(visitor) {
     var dontVisitChildren;
     dontVisitChildren = visitor.visit(this);
     if (!dontVisitChildren) {
@@ -580,20 +581,20 @@ davinci.js.ParenExpression.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.AllocationExpression
- * @extends davinci.js.Expression
+ * @class exports.AllocationExpression
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.AllocationExpression = function() {
+exports.AllocationExpression = function() {
 
-    this.inherits(davinci.js.Expression);
+    this.inherits(exports.Expression);
     this.elementType = "AllocationExpression";
     this.expression = null;
     this.arguments = null;
 };
 
-davinci.Inherits(davinci.js.AllocationExpression, davinci.js.Expression);
-davinci.js.AllocationExpression.prototype.getText = function(context) {
+davinci.Inherits(exports.AllocationExpression, exports.Expression);
+exports.AllocationExpression.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -615,7 +616,7 @@ davinci.js.AllocationExpression.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.AllocationExpression.prototype.visit = function(visitor) {
+exports.AllocationExpression.prototype.visit = function(visitor) {
     var dontVisitChildren;
     dontVisitChildren = visitor.visit(this);
     if (!dontVisitChildren) {
@@ -627,19 +628,19 @@ davinci.js.AllocationExpression.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.FunctionExpression
- * @extends davinci.js.Expression
+ * @class exports.FunctionExpression
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.FunctionExpression = function() {
+exports.FunctionExpression = function() {
 
-    this.inherits(davinci.js.Expression);
+    this.inherits(exports.Expression);
     this.elementType = "FunctionExpression";
     this.func = null;
 };
 
-davinci.Inherits(davinci.js.FunctionExpression, davinci.js.Expression);
-davinci.js.FunctionExpression.prototype.getText = function(context) {
+davinci.Inherits(exports.FunctionExpression, exports.Expression);
+exports.FunctionExpression.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -651,11 +652,11 @@ davinci.js.FunctionExpression.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.FunctionExpression.prototype.getLabel = function() {
+exports.FunctionExpression.prototype.getLabel = function() {
     return this.func.getLabel();
 };
 
-davinci.js.AllocationExpression.prototype.visit = function(visitor) {
+exports.AllocationExpression.prototype.visit = function(visitor) {
     var dontVisitChildren;
     dontVisitChildren = visitor.visit(this);
 
@@ -674,20 +675,20 @@ davinci.js.AllocationExpression.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.UnaryExpression
- * @extends davinci.js.Expression
+ * @class exports.UnaryExpression
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.UnaryExpression = function() {
+exports.UnaryExpression = function() {
 
-    this.inherits(davinci.js.Expression);
+    this.inherits(exports.Expression);
     this.elementType = "UnaryExpression";
     this.operator = null;
     this.expr = null;
 };
 
-davinci.Inherits(davinci.js.UnaryExpression, davinci.js.Expression);
-davinci.js.UnaryExpression.prototype.getText = function(context) {
+davinci.Inherits(exports.UnaryExpression, exports.Expression);
+exports.UnaryExpression.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -699,7 +700,7 @@ davinci.js.UnaryExpression.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.UnaryExpression.prototype.visit = function(visitor) {
+exports.UnaryExpression.prototype.visit = function(visitor) {
     var dontVisitChildren;
     dontVisitChildren = visitor.visit(this);
     if (!dontVisitChildren) {
@@ -710,18 +711,18 @@ davinci.js.UnaryExpression.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.ObjectLiteral
- * @extends davinci.js.Expression
+ * @class exports.ObjectLiteral
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.ObjectLiteral = function() {
+exports.ObjectLiteral = function() {
 
-    this.inherits(davinci.js.Expression);
+    this.inherits(exports.Expression);
     this.elementType = "ObjectLiteral";
 };
 
-davinci.Inherits(davinci.js.ObjectLiteral, davinci.js.Expression);
-davinci.js.ObjectLiteral.prototype.getText = function(context) {
+davinci.Inherits(exports.ObjectLiteral, exports.Expression);
+exports.ObjectLiteral.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -743,11 +744,11 @@ davinci.js.ObjectLiteral.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.ObjectLiteral.prototype.getLabel = function() {
+exports.ObjectLiteral.prototype.getLabel = function() {
     return "{}";
 };
 
-davinci.js.ObjectLiteral.prototype.visit = function(visitor) {
+exports.ObjectLiteral.prototype.visit = function(visitor) {
     var dontVisitChildren;
     dontVisitChildren = visitor.visit(this);
     if (!dontVisitChildren) {
@@ -760,21 +761,21 @@ davinci.js.ObjectLiteral.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.ObjectLiteralField
- * @extends davinci.js.Expression
+ * @class exports.ObjectLiteralField
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.ObjectLiteralField = function() {
+exports.ObjectLiteralField = function() {
 
-    this.inherits(davinci.js.Expression);
+    this.inherits(exports.Expression);
     this.elementType = "ObjectLiteralField";
     this.name = "";
     this.nameType = "";
     this.initializer = null;
 };
 
-davinci.Inherits(davinci.js.ObjectLiteralField, davinci.js.Expression);
-davinci.js.ObjectLiteralField.prototype.getText = function(context) {
+davinci.Inherits(exports.ObjectLiteralField, exports.Expression);
+exports.ObjectLiteralField.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -790,7 +791,7 @@ davinci.js.ObjectLiteralField.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.ObjectLiteralField.prototype.getLabel = function() {
+exports.ObjectLiteralField.prototype.getLabel = function() {
     var s;
     if (this.nameType == '(string)')
         s = "'" + this.name + "'";
@@ -800,7 +801,7 @@ davinci.js.ObjectLiteralField.prototype.getLabel = function() {
     return s;
 };
 
-davinci.js.ObjectLiteralField.prototype.visit = function(visitor) {
+exports.ObjectLiteralField.prototype.visit = function(visitor) {
     var dontVisitChildren;
     dontVisitChildren = visitor.visit(this);
     if (!dontVisitChildren) {
@@ -811,19 +812,19 @@ davinci.js.ObjectLiteralField.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.ArrayAccess
- * @extends davinci.js.Expression
+ * @class exports.ArrayAccess
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.ArrayAccess = function() {
-    this.inherits(davinci.js.Expression);
+exports.ArrayAccess = function() {
+    this.inherits(exports.Expression);
     this.elementType = "ArrayAccess";
     this.array = null;
     this.index = null;
 };
 
-davinci.Inherits(davinci.js.ArrayAccess, davinci.js.Expression);
-davinci.js.ArrayAccess.prototype.getText = function(context) {
+davinci.Inherits(exports.ArrayAccess, exports.Expression);
+exports.ArrayAccess.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -836,7 +837,7 @@ davinci.js.ArrayAccess.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.ArrayAccess.prototype.visit = function(visitor) {
+exports.ArrayAccess.prototype.visit = function(visitor) {
     var dontVisitChildren;
     dontVisitChildren = visitor.visit(this);
     if (!dontVisitChildren) {
@@ -849,17 +850,17 @@ davinci.js.ArrayAccess.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.ArrayInitializer
- * @extends davinci.js.Expression
+ * @class exports.ArrayInitializer
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.ArrayInitializer = function() {
-    this.inherits(davinci.js.Expression);
+exports.ArrayInitializer = function() {
+    this.inherits(exports.Expression);
     this.elementType = "ArrayInitializer";
 };
 
-davinci.Inherits(davinci.js.ArrayInitializer, davinci.js.Expression);
-davinci.js.ArrayInitializer.prototype.getText = function(context) {
+davinci.Inherits(exports.ArrayInitializer, exports.Expression);
+exports.ArrayInitializer.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -877,7 +878,7 @@ davinci.js.ArrayInitializer.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.ArrayInitializer.prototype.visit = function(visitor) {
+exports.ArrayInitializer.prototype.visit = function(visitor) {
     var dontVisitChildren;
     dontVisitChildren = visitor.visit(this);
     if (!dontVisitChildren) {
@@ -890,20 +891,20 @@ davinci.js.ArrayInitializer.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.PrefixPostfixExpression
- * @extends davinci.js.Expression
+ * @class exports.PrefixPostfixExpression
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.PrefixPostfixExpression = function() {
-    this.inherits(davinci.js.Expression);
+exports.PrefixPostfixExpression = function() {
+    this.inherits(exports.Expression);
     this.isPrefix = false;
     this.expr = null;
     this.operator = null;
     this.elementType = "PrefixPostfixExpression";
 };
 
-davinci.Inherits(davinci.js.PrefixPostfixExpression, davinci.js.Expression);
-davinci.js.PrefixPostfixExpression.prototype.getText = function(context) {
+davinci.Inherits(exports.PrefixPostfixExpression, exports.Expression);
+exports.PrefixPostfixExpression.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -919,7 +920,7 @@ davinci.js.PrefixPostfixExpression.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.PrefixPostfixExpression.prototype.visit = function(visitor) {
+exports.PrefixPostfixExpression.prototype.visit = function(visitor) {
     var dontVisitChildren;
     dontVisitChildren = visitor.visit(this);
     if (!dontVisitChildren) {
@@ -930,20 +931,20 @@ davinci.js.PrefixPostfixExpression.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.ConditionalExpression
- * @extends davinci.js.Expression
+ * @class exports.ConditionalExpression
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.ConditionalExpression = function() {
-    this.inherits(davinci.js.Expression);
+exports.ConditionalExpression = function() {
+    this.inherits(exports.Expression);
     this.condition = null;
     this.trueValue = null;
     this.falseValue = null;
     this.elementType = "ConditionalExpression";
 };
 
-davinci.Inherits(davinci.js.ConditionalExpression, davinci.js.Expression);
-davinci.js.ConditionalExpression.prototype.getText = function(context) {
+davinci.Inherits(exports.ConditionalExpression, exports.Expression);
+exports.ConditionalExpression.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -957,7 +958,7 @@ davinci.js.ConditionalExpression.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.ConditionalExpression.prototype.visit = function(visitor) {
+exports.ConditionalExpression.prototype.visit = function(visitor) {
     var dontVisitChildren;
     dontVisitChildren = visitor.visit(this);
     if (!dontVisitChildren) {
@@ -970,55 +971,55 @@ davinci.js.ConditionalExpression.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.Label
- * @extends davinci.js.JSElement
+ * @class exports.Label
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.Label = function(name) {
-    this.inherits(davinci.js.JSElement);
+exports.Label = function(name) {
+    this.inherits(exports.JSElement);
     this.elementType = "Label";
     this.nosemicolon = true;
     this.s = name;
 };
 
-davinci.Inherits(davinci.js.Label, davinci.js.JSElement);
+davinci.Inherits(exports.Label, exports.JSElement);
 
-davinci.js.Label.prototype.getText = function(context) {
+exports.Label.prototype.getText = function(context) {
 
     return this.s + " : ";
 };
 
 /**
- * @class davinci.js.UnparsedRegion
- * @extends davinci.js.JSElement
+ * @class exports.UnparsedRegion
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.UnparsedRegion = function(content) {
-    this.inherits(davinci.js.JSElement);
+exports.UnparsedRegion = function(content) {
+    this.inherits(exports.JSElement);
     this.elementType = "UnparsedRegion";
     this.s = content;
 };
 
-davinci.Inherits(davinci.js.UnparsedRegion, davinci.js.JSElement);
+davinci.Inherits(exports.UnparsedRegion, exports.JSElement);
 
-davinci.js.UnparsedRegion.prototype.getText = function(context) {
+exports.UnparsedRegion.prototype.getText = function(context) {
 
     return this.s;
 };
 
 /**
- * @class davinci.js.Comment
- * @extends davinci.js.JSElement
+ * @class exports.Comment
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.Comment = function() {
-    this.inherits(davinci.js.JSElement);
+exports.Comment = function() {
+    this.inherits(exports.JSElement);
     this.elementType = "Comment";
     this.nosemicolon = true;
 };
 
-davinci.Inherits(davinci.js.Comment, davinci.js.JSElement);
-davinci.js.Comment.prototype.addComment = function(type, startLne, startOffst,
+davinci.Inherits(exports.Comment, exports.JSElement);
+exports.Comment.prototype.addComment = function(type, startLne, startOffst,
         stopLne, stopOffst, text) {
 
     if (this.comments == null) {
@@ -1037,7 +1038,7 @@ davinci.js.Comment.prototype.addComment = function(type, startLne, startOffst,
 
 };
 
-davinci.js.Comment.prototype.getText = function(context) {
+exports.Comment.prototype.getText = function(context) {
     var s = "";
 
     for ( var i = 0; i < this.comments.length; i++ ) {
@@ -1051,17 +1052,17 @@ davinci.js.Comment.prototype.getText = function(context) {
 };
 
 /**
- * @class davinci.js.EmptyExpression
- * @extends davinci.js.Expression
+ * @class exports.EmptyExpression
+ * @extends exports.Expression
  * @constructor
  */
-davinci.js.EmptyExpression = function() {
-    this.inherits(davinci.js.Expression);
+exports.EmptyExpression = function() {
+    this.inherits(exports.Expression);
     this.elementType = "EmptyExpression";
 };
 
-davinci.Inherits(davinci.js.EmptyExpression, davinci.js.Expression);
-davinci.js.EmptyExpression.prototype.getText = function(context) {
+davinci.Inherits(exports.EmptyExpression, exports.Expression);
+exports.EmptyExpression.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -1073,20 +1074,20 @@ davinci.js.EmptyExpression.prototype.getText = function(context) {
 };
 
 /**
- * @class davinci.js.VariableDeclaration
- * @extends davinci.js.JSElement
+ * @class exports.VariableDeclaration
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.VariableDeclaration = function() {
+exports.VariableDeclaration = function() {
 
-    this.inherits(davinci.js.JSElement);
+    this.inherits(exports.JSElement);
 
     this.elementType = "VariableDeclaration";
     this.value = null;
     this.type = null;
 };
-davinci.Inherits(davinci.js.VariableDeclaration, davinci.js.JSElement);
-davinci.js.VariableDeclaration.prototype.getText = function(context) {
+davinci.Inherits(exports.VariableDeclaration, exports.JSElement);
+exports.VariableDeclaration.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -1103,7 +1104,7 @@ davinci.js.VariableDeclaration.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.VariableDeclaration.prototype.visit = function(visitor) {
+exports.VariableDeclaration.prototype.visit = function(visitor) {
     var dontVisitChildren;
     dontVisitChildren = visitor.visit(this);
     if (!dontVisitChildren) {
@@ -1115,7 +1116,7 @@ davinci.js.VariableDeclaration.prototype.visit = function(visitor) {
         visitor.endVisit(this);
 };
 
-// dojo.declare("davinci.js.VariableDeclaration", davinci.js.JSElement, {
+// dojo.declare("exports.VariableDeclaration", exports.JSElement, {
 // elementType : "VariableDeclaration",
 //	
 // getText : function () {}
@@ -1124,19 +1125,19 @@ davinci.js.VariableDeclaration.prototype.visit = function(visitor) {
 //
 
 /**
- * @class davinci.js.VariableFragment
- * @extends davinci.js.JSElement
+ * @class exports.VariableFragment
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.VariableFragment = function() {
+exports.VariableFragment = function() {
 
-    this.inherits(davinci.js.JSElement);
+    this.inherits(exports.JSElement);
     this.elementType = "VariableFragment";
     this.name = "";
     this.init = null;
 };
-davinci.Inherits(davinci.js.VariableFragment, davinci.js.JSElement);
-davinci.js.VariableFragment.prototype.getText = function(context) {
+davinci.Inherits(exports.VariableFragment, exports.JSElement);
+exports.VariableFragment.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -1150,7 +1151,7 @@ davinci.js.VariableFragment.prototype.getText = function(context) {
     }
     return s;
 };
-davinci.js.VariableFragment.prototype.visit = function(visitor) {
+exports.VariableFragment.prototype.visit = function(visitor) {
     var dontVisitChildren;
 
     dontVisitChildren = visitor.visit(this);
@@ -1163,19 +1164,19 @@ davinci.js.VariableFragment.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.Block
- * @extends davinci.js.JSElement
+ * @class exports.Block
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.Block = function() {
-    this.inherits(davinci.js.JSElement);
+exports.Block = function() {
+    this.inherits(exports.JSElement);
     this.nosemicolon = true;
     this.elementType = "Block";
     this.nosemicolon = true;
 };
-davinci.Inherits(davinci.js.Block, davinci.js.JSElement);
+davinci.Inherits(exports.Block, exports.JSElement);
 
-davinci.js.Block.prototype.getText = function(context) {
+exports.Block.prototype.getText = function(context) {
     context.indent += 2;
     var s = "";
     if (this.comment) {
@@ -1196,12 +1197,12 @@ davinci.js.Block.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.Block.prototype.getLabel = function() {
+exports.Block.prototype.getLabel = function() {
 
     return "{     }";
 };
 
-davinci.js.Block.prototype.visit = function(visitor) {
+exports.Block.prototype.visit = function(visitor) {
     var dontVisitChildren;
 
     dontVisitChildren = visitor.visit(this);
@@ -1214,21 +1215,21 @@ davinci.js.Block.prototype.visit = function(visitor) {
         visitor.endVisit(this);
 };
 /**
- * @class davinci.js.If
- * @extends davinci.js.JSElement
+ * @class exports.If
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.If = function() {
-    this.inherits(davinci.js.JSElement);
+exports.If = function() {
+    this.inherits(exports.JSElement);
     this.elementType = "If";
     this.expr = null;
     this.trueStmt = null;
     this.elseStmt = null;
     this.nosemicolon = true;
 };
-davinci.Inherits(davinci.js.If, davinci.js.JSElement);
+davinci.Inherits(exports.If, exports.JSElement);
 
-davinci.js.If.prototype.getText = function(context) {
+exports.If.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -1248,13 +1249,13 @@ davinci.js.If.prototype.getText = function(context) {
     context.indent -= 2;
     return s;
 };
-davinci.js.If.prototype.getLabel = function() {
+exports.If.prototype.getLabel = function() {
 
     return "if (" + this.expr.getLabel() + ")";
     ;
 };
 
-davinci.js.If.prototype.visit = function(visitor) {
+exports.If.prototype.visit = function(visitor) {
     var dontVisitChildren;
 
     dontVisitChildren = visitor.visit(this);
@@ -1270,21 +1271,21 @@ davinci.js.If.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.Try
- * @extends davinci.js.JSElement
+ * @class exports.Try
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.Try = function() {
-    this.inherits(davinci.js.JSElement);
+exports.Try = function() {
+    this.inherits(exports.JSElement);
     this.elementType = "Try";
     this.stmt = null;
     this.catchBlock = null;
     this.finallyBlock = null;
     this.catchArgument = null;
 };
-davinci.Inherits(davinci.js.Try, davinci.js.JSElement);
+davinci.Inherits(exports.Try, exports.JSElement);
 
-davinci.js.Try.prototype.getText = function(context) {
+exports.Try.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -1308,12 +1309,12 @@ davinci.js.Try.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.Try.prototype.getLabel = function() {
+exports.Try.prototype.getLabel = function() {
 
     return "try";
 };
 
-davinci.js.Try.prototype.visit = function(visitor) {
+exports.Try.prototype.visit = function(visitor) {
     var dontVisitChildren;
 
     dontVisitChildren = visitor.visit(this);
@@ -1329,12 +1330,12 @@ davinci.js.Try.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.For
- * @extends davinci.js.JSElement
+ * @class exports.For
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.For = function() {
-    this.inherits(davinci.js.JSElement);
+exports.For = function() {
+    this.inherits(exports.JSElement);
     this.elementType = "For";
     this.initializations = null;
     this.condition = null;
@@ -1342,9 +1343,9 @@ davinci.js.For = function() {
     this.action = null;
     this.nosemicolon = true;
 };
-davinci.Inherits(davinci.js.For, davinci.js.JSElement);
+davinci.Inherits(exports.For, exports.JSElement);
 
-davinci.js.For.prototype.getText = function(context) {
+exports.For.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -1378,12 +1379,12 @@ davinci.js.For.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.For.prototype.getLabel = function() {
+exports.For.prototype.getLabel = function() {
 
     return "for";
 };
 
-davinci.js.For.prototype.visit = function(visitor) {
+exports.For.prototype.visit = function(visitor) {
     var dontVisitChildren;
 
     dontVisitChildren = visitor.visit(this);
@@ -1406,21 +1407,21 @@ davinci.js.For.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.ForIn
- * @extends davinci.js.JSElement
+ * @class exports.ForIn
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.ForIn = function() {
-    this.inherits(davinci.js.JSElement);
+exports.ForIn = function() {
+    this.inherits(exports.JSElement);
     this.elementType = "ForIn";
     this.iterationVar = null;
     this.collection = null;
     this.action = null;
     this.nosemicolon = true;
 };
-davinci.Inherits(davinci.js.ForIn, davinci.js.JSElement);
+davinci.Inherits(exports.ForIn, exports.JSElement);
 
-davinci.js.ForIn.prototype.getText = function(context) {
+exports.ForIn.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -1436,13 +1437,13 @@ davinci.js.ForIn.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.ForIn.prototype.getLabel = function() {
+exports.ForIn.prototype.getLabel = function() {
 
     return "for ( " + this.iterationVar.getLabel() + " in "
             + this.collection.getLabel() + ")";
 };
 
-davinci.js.ForIn.prototype.visit = function(visitor) {
+exports.ForIn.prototype.visit = function(visitor) {
     var dontVisitChildren;
 
     dontVisitChildren = visitor.visit(this);
@@ -1454,20 +1455,20 @@ davinci.js.ForIn.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.With
- * @extends davinci.js.JSElement
+ * @class exports.With
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.With = function() {
-    this.inherits(davinci.js.JSElement);
+exports.With = function() {
+    this.inherits(exports.JSElement);
     this.elementType = "With";
     this.expr = null;
     this.action = null;
     this.nosemicolon = true;
 };
-davinci.Inherits(davinci.js.With, davinci.js.JSElement);
+davinci.Inherits(exports.With, exports.JSElement);
 
-davinci.js.With.prototype.getText = function(context) {
+exports.With.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -1482,11 +1483,11 @@ davinci.js.With.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.With.prototype.getLabel = function() {
+exports.With.prototype.getLabel = function() {
 
     return "with ( " + this.expr.getText(context) + " )";
 };
-davinci.js.With.prototype.visit = function(visitor) {
+exports.With.prototype.visit = function(visitor) {
     var dontVisitChildren;
 
     dontVisitChildren = visitor.visit(this);
@@ -1497,20 +1498,20 @@ davinci.js.With.prototype.visit = function(visitor) {
         visitor.endVisit(this);
 };
 /**
- * @class davinci.js.While
- * @extends davinci.js.JSElement
+ * @class exports.While
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.While = function() {
-    this.inherits(davinci.js.JSElement);
+exports.While = function() {
+    this.inherits(exports.JSElement);
     this.elementType = "While";
     this.expr = null;
     this.action = null;
     this.nosemicolon = true;
 };
-davinci.Inherits(davinci.js.While, davinci.js.JSElement);
+davinci.Inherits(exports.While, exports.JSElement);
 
-davinci.js.While.prototype.getText = function(context) {
+exports.While.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -1525,12 +1526,12 @@ davinci.js.While.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.While.prototype.getLabel = function() {
+exports.While.prototype.getLabel = function() {
 
     return "while ( " + this.expr.getLabel() + " )";
 };
 
-davinci.js.While.prototype.visit = function(visitor) {
+exports.While.prototype.visit = function(visitor) {
     var dontVisitChildren;
 
     dontVisitChildren = visitor.visit(this);
@@ -1542,17 +1543,17 @@ davinci.js.While.prototype.visit = function(visitor) {
         visitor.endVisit(this);
 };
 /**
- * @class davinci.js.Debugger
- * @extends davinci.js.JSElement
+ * @class exports.Debugger
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.Debugger = function(statement) {
-    this.inherits(davinci.js.JSElement);
+exports.Debugger = function(statement) {
+    this.inherits(exports.JSElement);
     this.elementType = "Debugger";
 };
-davinci.Inherits(davinci.js.Debugger, davinci.js.JSElement);
+davinci.Inherits(exports.Debugger, exports.JSElement);
 
-davinci.js.Debugger.prototype.getText = function(context) {
+exports.Debugger.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -1564,19 +1565,19 @@ davinci.js.Debugger.prototype.getText = function(context) {
 };
 
 /**
- * @class davinci.js.Branch
- * @extends davinci.js.JSElement
+ * @class exports.Branch
+ * @extends exports.JSElement
  * @constructor "continue" or "break"
  */
-davinci.js.Branch = function(statement) {
-    this.inherits(davinci.js.JSElement);
+exports.Branch = function(statement) {
+    this.inherits(exports.JSElement);
     this.elementType = "Branch";
     this.statement = statement;
     this.targetLabel = null;
 };
-davinci.Inherits(davinci.js.Branch, davinci.js.JSElement);
+davinci.Inherits(exports.Branch, exports.JSElement);
 
-davinci.js.Branch.prototype.getText = function(context) {
+exports.Branch.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -1590,7 +1591,7 @@ davinci.js.Branch.prototype.getText = function(context) {
     return s;
 };
 
-davinci.js.Branch.prototype.visit = function(visitor) {
+exports.Branch.prototype.visit = function(visitor) {
     var dontVisitChildren;
 
     dontVisitChildren = visitor.visit(this);
@@ -1598,19 +1599,19 @@ davinci.js.Branch.prototype.visit = function(visitor) {
         visitor.endVisit(this);
 };
 /**
- * @class davinci.js.Exit
- * @extends davinci.js.JSElement
+ * @class exports.Exit
+ * @extends exports.JSElement
  * @constructor "return" or "throw"
  */
-davinci.js.Exit = function(statement) {
-    this.inherits(davinci.js.JSElement);
+exports.Exit = function(statement) {
+    this.inherits(exports.JSElement);
     this.elementType = "Exit";
     this.statement = statement;
     this.expr = null;
 };
-davinci.Inherits(davinci.js.Exit, davinci.js.JSElement);
+davinci.Inherits(exports.Exit, exports.JSElement);
 
-davinci.js.Exit.prototype.getText = function(context) {
+exports.Exit.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -1625,19 +1626,19 @@ davinci.js.Exit.prototype.getText = function(context) {
 };
 
 /**
- * @class davinci.js.Do
- * @extends davinci.js.JSElement
+ * @class exports.Do
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.Do = function() {
-    this.inherits(davinci.js.JSElement);
+exports.Do = function() {
+    this.inherits(exports.JSElement);
     this.elementType = "Do";
     this.expr = null;
     this.action = null;
 };
-davinci.Inherits(davinci.js.Do, davinci.js.JSElement);
+davinci.Inherits(exports.Do, exports.JSElement);
 
-davinci.js.Do.prototype.getText = function(context) {
+exports.Do.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -1655,12 +1656,12 @@ davinci.js.Do.prototype.getText = function(context) {
 
 };
 
-davinci.js.Do.prototype.getLabel = function() {
+exports.Do.prototype.getLabel = function() {
 
     return "do while";
 };
 
-davinci.js.Do.prototype.visit = function(visitor) {
+exports.Do.prototype.visit = function(visitor) {
     var dontVisitChildren;
 
     dontVisitChildren = visitor.visit(this);
@@ -1672,19 +1673,19 @@ davinci.js.Do.prototype.visit = function(visitor) {
         visitor.endVisit(this);
 };
 /**
- * @class davinci.js.Switch
- * @extends davinci.js.JSElement
+ * @class exports.Switch
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.Switch = function() {
-    this.inherits(davinci.js.JSElement);
+exports.Switch = function() {
+    this.inherits(exports.JSElement);
     this.elementType = "Switch";
     this.expr = null;
     this.nosemicolon = true;
 };
-davinci.Inherits(davinci.js.Switch, davinci.js.JSElement);
+davinci.Inherits(exports.Switch, exports.JSElement);
 
-davinci.js.Switch.prototype.getText = function(context) {
+exports.Switch.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -1704,12 +1705,12 @@ davinci.js.Switch.prototype.getText = function(context) {
 
 };
 
-davinci.js.Switch.prototype.getLabel = function() {
+exports.Switch.prototype.getLabel = function() {
 
     return "switch (" + this.expr.getLabel() + " )";
 };
 
-davinci.js.Switch.prototype.visit = function(visitor) {
+exports.Switch.prototype.visit = function(visitor) {
     var dontVisitChildren;
 
     dontVisitChildren = visitor.visit(this);
@@ -1725,18 +1726,18 @@ davinci.js.Switch.prototype.visit = function(visitor) {
 };
 
 /**
- * @class davinci.js.Case
- * @extends davinci.js.JSElement
+ * @class exports.Case
+ * @extends exports.JSElement
  * @constructor
  */
-davinci.js.Case = function() {
-    this.inherits(davinci.js.JSElement);
+exports.Case = function() {
+    this.inherits(exports.JSElement);
     this.elementType = "Case";
     this.expr = null;
 };
-davinci.Inherits(davinci.js.Case, davinci.js.JSElement);
+davinci.Inherits(exports.Case, exports.JSElement);
 
-davinci.js.Case.prototype.getText = function(context) {
+exports.Case.prototype.getText = function(context) {
     var s = "";
     if (this.comment) {
         s += this.printNewLine(context) + this.comment.getText(context);
@@ -1753,12 +1754,13 @@ davinci.js.Case.prototype.getText = function(context) {
 
 };
 
-davinci.js.Case.prototype.visit = function(visitor) {
+exports.Case.prototype.visit = function(visitor) {
     var dontVisitChildren;
 
     dontVisitChildren = visitor.visit(this);
     if (visitor.endVisit)
         visitor.endVisit(this);
 };
+});
 
-//davinci.js.JSElement.parse =davinci.model.parser.parse;
+//exports.JSElement.parse =davinci.model.parser.parse;

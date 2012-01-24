@@ -1,15 +1,13 @@
-dojo.provide("davinci.html.ui.HTMLOutline");
-dojo.require("davinci.ui.widgets.DavinciModelTreeModel");
+define([
+	"dojo/_base/declare",
+	"davinci/ui/widgets/DavinciModelTreeModel"
+], function(declare, DavinciModelTreeModel){
 
-
-dojo.declare("davinci.html.ui.HTMLOutline", null, {
-	
-	
+declare("davinci.html.ui.HTMLOutline", null, {
 	constructor : function (model)
 	{
 		this._htmlModel=model;
 	},
-	
 	
 	getModel : function()
 	{
@@ -17,39 +15,34 @@ dojo.declare("davinci.html.ui.HTMLOutline", null, {
 		return this._model;
 	}
 });
-dojo.declare("davinci.html.ui.HTMLOutlineModel",	davinci.ui.widgets.DavinciModelTreeModel, {
 
+declare("davinci.html.ui.HTMLOutlineModel",	DavinciModelTreeModel, {
 	
-	_childList: function(item)
-	{
-	    var children=[];
-		switch (item.elementType)
-		{
+	_childList: function(item) {
+		var children = [];
+		switch (item.elementType) {
 		case "HTMLFile":
-			for (var i=0;i<item.children.length;i++)
-			{
-				switch (item.children[i].elementType)
-				{
-				case  "HTMLElement":
+			for ( var i = 0; i < item.children.length; i++) {
+				switch (item.children[i].elementType) {
+				case "HTMLElement":
 					children.push(item.children[i]);
 				}
 			}
 			break;
 		case "HTMLElement":
-			for (var i=0;i<item.children.length;i++)
-			{
-				switch (item.children[i].elementType)
-				{
-				case  "HTMLElement":
+			for ( var i = 0; i < item.children.length; i++) {
+				switch (item.children[i].elementType) {
+				case "HTMLElement":
 					children.push(item.children[i]);
 				}
 			}
 			break;
-			default:
-//				children=null;
+		default:
+			// children=null;
 		}
-		
+
 		return children;
 	}
 
+});
 });

@@ -1,8 +1,8 @@
-dojo.provide("davinci.html.HTMLParser");
-
-dojo.require("davinci.html.HTMLModel");
-dojo.require("davinci.model.parser.Tokenizer");
-
+define([
+	"dojo/_base/declare",
+	"./HTMLModel",
+	"davinci/model/parser/Tokenizer"
+], function(declare, HTMLModel, Tokenizer){
 
 /* This file defines an XML parser, with a few kludges to make it
  * useable for HTML. autoSelfClosers defines a set of tag names that
@@ -12,7 +12,7 @@ dojo.require("davinci.model.parser.Tokenizer");
  * {useHTMLKludges: false} as parserConfig option.
  */
 
-davinci.html.XMLParser  = (function() {
+XMLParser  = (function() {
   var Kludges = {
     autoSelfClosers: {"br": true, "img": true, "hr": true, "link": true, "input": true,
                       "meta": true, "col": true, "frame": true, "base": true, "area": true},
@@ -297,12 +297,12 @@ davinci.html.XMLParser  = (function() {
 })();
 
 
-davinci.html.HTMLParser.parse=function(text,parentElement)
+XMLParser.parse=function(text,parentElement)
 {
 //	  debugger;
 	  var txtStream = { next : function () {if (++this.count==1)  return text; else {throw StopIteration;}} , count:0, text:text};
 	  var stream=davinci.model.parser.stringStream(txtStream);
-	  var parser = davinci.html.XMLParser.make(stream);
+	  var parser = XMLParser.make(stream);
 	  var token;
 	  var errors=[];
 	  function error(text){errors.push(text);}
@@ -372,7 +372,7 @@ davinci.html.HTMLParser.parse=function(text,parentElement)
 		  }
 		  else
 		     updateFMInfo(str,lastElement);
-		  davinci.html.CSSParser.parse(stream,lastElement);
+		  CSSParser.parse(stream,lastElement);
 	  }
 	  
 	  function nextToken(ignoreWS)
@@ -542,4 +542,7 @@ davinci.html.HTMLParser.parse=function(text,parentElement)
 	  } catch (e) {}
 	  
 	  return { errors:errors, endOffset:(token?token.offset:0) }
-}
+};
+
+return XMLParser;
+});

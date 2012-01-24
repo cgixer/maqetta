@@ -3,9 +3,6 @@ dojo.provide("test.format");
 dojo.require("davinci.js.JSModel");
 dojo.require("davinci.js.Format");
 
-
-
-
 function __testFormat(sourceText,testOptions)
 {
 	var options={blockNewLine:false,

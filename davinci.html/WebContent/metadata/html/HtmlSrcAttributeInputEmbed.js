@@ -1,6 +1,6 @@
 define([
     	"dojo/_base/declare",
-    	"davinci/libraries/html/html/HtmlSrcAttributeInput"
+    	"./HtmlSrcAttributeInput"
     ], function(declare, HtmlSrcAttributeInput){
 
 return declare("davinci.libraries.html.html.HtmlSrcAttributeInputEmbed", HtmlSrcAttributeInput, {

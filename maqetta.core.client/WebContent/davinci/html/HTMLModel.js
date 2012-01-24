@@ -1,9 +1,10 @@
-dojo.provide("davinci.html.HTMLModel");
-dojo.require("davinci.model.Model");
-dojo.require("davinci.js.JSModel");
-dojo.require("davinci.html.CSSModel");
-dojo.require("davinci.html.HTMLParser");
-
+define([
+	"dojo/_base/declare",
+	"davinci/model/Model",
+	"davinci/js/JSModel",
+	"./CSSModel",
+	"./HTMLParser"
+], function(declare, Model, JSModel, CSSModel, HTMLParser){
 
 if (!davinci.html)
     davinci.html={};    
@@ -210,14 +211,14 @@ davinci.html.HTMLFile.prototype.setText = function (text, noImport) {
     this.children = [];
     this._styleElem = null;
 
-    var result = davinci.html.HTMLParser.parse(text || "", this);
+    var result = HTMLParser.parse(text || "", this);
     var formattedHTML = "";
     if (!noImport && result.errors.length == 0) {
         // the input html may have extraneous whitespace which is thrown away by our formatting
         // reparse the html on the source as formatted by us, so positions are correct
         formattedHTML = this.getText();
         this.children = [];
-        result = davinci.html.HTMLParser.parse(formattedHTML, this);
+        result = HTMLParser.parse(formattedHTML, this);
     }
 
     // this.reportPositions();
@@ -816,7 +817,7 @@ davinci.html.HTMLElement.prototype.setText = function (text) {
 
     var options={xmode:'outer'};
     var currentParent=this.parent;
-    var result=davinci.html.HTMLParser.parse(text,this);
+    var result=HTMLParser.parse(text,this);
 
     this.errors=result.errors;
     // first child is actually the parsed element, so replace this with child
@@ -926,3 +927,4 @@ davinci.html.HTMLComment.prototype.getText = function(context) {
     var dash= this.isProcessingInstruction ? "":"--";
     return '<!'+dash+this.value+dash+'>';
 };
+});

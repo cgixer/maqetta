@@ -1,24 +1,25 @@
-dojo.provide("davinci.html.ui.CSSEditor");
-dojo.require("davinci.ui.ModelEditor");
-dojo.require("davinci.html.CSSModel");
-dojo.require("davinci.html.ui.CSSOutline");
-dojo.require("davinci.model.Factory");
+define([
+	"dojo/_base/declare",
+	"davinci/ui/ModelEditor",
+	"davinci/html/CSSModel",
+	"davinci/html/ui/CSSOutline",
+	"davinci/model/Factory"
+], function(declare, ModelEditor, CSSModel, CSSOutline, Factory){
 
-
-dojo.declare("davinci.html.ui.CSSEditor", davinci.ui.ModelEditor, {
-	
-
+declare("davinci.html.ui.CSSEditor", ModelEditor, {
 	
 	constructor : function (element) {
 		this.cssFile=davinci.model.Factory.newCSS();
 		this.model=this.cssFile;
 	},
+	
 	destroy : function (){
 		this.cssFile.close();
 		this.inherited(arguments);
 		
 		
 	},
+	
 	getOutline : function ()
 	{
 		if (!this.outline)
@@ -39,14 +40,15 @@ dojo.declare("davinci.html.ui.CSSEditor", davinci.ui.ModelEditor, {
 	}
 
 });
-dojo.declare("davinci.html.CSSEditorContext", null, {
-	  constructor : function (editor) {
-	this.editor=editor;
-	this.connects=[];
-	this.subscriptions=[];
-	this.subscriptions.push(dojo.subscribe("/davinci/ui/selectionChanged",this,this._selection));
 
+declare("davinci.html.CSSEditorContext", null, {
+	constructor : function (editor) {
+		this.editor=editor;
+		this.connects=[];
+		this.subscriptions=[];
+		this.subscriptions.push(dojo.subscribe("/davinci/ui/selectionChanged",this,this._selection));
 	},
+	
 	_selection : function (selection)
 	{
 		if (selection[0] && selection[0].model)
@@ -75,6 +77,7 @@ dojo.declare("davinci.html.CSSEditorContext", null, {
 
 		}
 	},
+	
 	getSelection : function()
 	{
 //		var model = this.editor.getSelection();
@@ -84,15 +87,17 @@ dojo.declare("davinci.html.CSSEditorContext", null, {
 		}
  	return [];
 	},
+	
 	onSelectionChange : function()
 	{
 	}
 });
 
-dojo.declare("davinci.html.CSSEditorWidget", null, {
-	  constructor : function (context) {
-	this.context=context;
+declare("davinci.html.CSSEditorWidget", null, {
+	constructor : function (context) {
+		this.context=context;
 	},
+	
 	getValues : function ()
 	{
 		if (!this.values)
@@ -107,5 +112,6 @@ dojo.declare("davinci.html.CSSEditorWidget", null, {
 		}
 		return this.values;
 	}
+});
 });
 
